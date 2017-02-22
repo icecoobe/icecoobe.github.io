@@ -1,0 +1,8 @@
+title: Happy Hacking
+description: We all risk enslaved by technology, lets enjoy hacking right now.
+google_analytics: 
+show_downloads: true
+theme: jekyll-theme-hacker
+
+gems:
+  - jekyll-mentions
