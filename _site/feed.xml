@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Luke is being a better man</title>
+    <description>Keep trying, then grow up better.</description>
+    <link>http://localhost:4000/</link>
+    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Fri, 10 Mar 2017 17:05:28 +0800</pubDate>
+    <lastBuildDate>Fri, 10 Mar 2017 17:05:28 +0800</lastBuildDate>
+    <generator>Jekyll v3.4.0</generator>
+    
+      <item>
+        <title>Fix issues when building Android kernel for Nexus 9</title>
+        <description>&lt;h2 id=&quot;elfh-file-not-found&quot;&gt;‘elf.h’ file not found&lt;/h2&gt;
+&lt;p&gt;&lt;del&gt;安装homebrew
+安装libelf
+brew install libelf&lt;/del&gt;
+拷贝 elf.h (二选一，两个都行) 
+	1. &lt;a href=&quot;https://gist.github.com/mlafeldt/3885346&quot;&gt;github&lt;/a&gt;
+	2. 修改&lt;code class=&quot;highlighter-rouge&quot;&gt;/Volumes/android/aosp/external/elfutils/libelf/elf.h&lt;/code&gt;
+遇到了 &lt;code class=&quot;highlighter-rouge&quot;&gt;features.h 文件未找到的错误&lt;/code&gt;，就将 &lt;code class=&quot;highlighter-rouge&quot;&gt;#include &amp;lt;features.h&amp;gt;&lt;/code&gt; 一行注释掉。 
+将 &lt;code class=&quot;highlighter-rouge&quot;&gt;elf.h&lt;/code&gt; 拷贝到 &lt;code class=&quot;highlighter-rouge&quot;&gt;/usr/include&lt;/code&gt; 或者 &lt;code class=&quot;highlighter-rouge&quot;&gt;/usr/local/include&lt;/code&gt; 中，推荐放在后者，放在前者的话系统升级时会覆盖。&lt;em&gt;目前发现 &lt;code class=&quot;highlighter-rouge&quot;&gt;libelf&lt;/code&gt;不需要&lt;/em&gt;。&lt;/p&gt;
+
+&lt;p&gt;## arm-linux-androideabi-gcc: error: unrecognized command line option ‘-mgeneral-regs-only’
+这个错误是我的交叉编译环境错了，我写了一个脚本来设置了。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/sh&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;AOSP_HOME&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/Volumes/android/aosp
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ARCH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;arm64
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CROSS_COMPILE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;aarch64-linux-android-
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$AOSP_HOME&lt;/span&gt;/prebuilts/gcc/darwin-x86/aarch64/aarch64-linux-android-4.9/bin:&lt;span class=&quot;nv&quot;&gt;$PATH&lt;/span&gt;
+
+make flounder_defconfig
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;## ’vdso_offset_sigtramp’ undeclared (first use in this function)&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;In file included from arch/arm64/kernel/signal.c:36:0: 
+arch/arm64/kernel/signal.c: In function ‘setup_return’: 
+/Volumes/android/tegra/arch/arm64/include/asm/vdso.h:34:11: error: ‘vdso_offset_sigtramp’ undeclared (first use in this function) 
+  (void *)(vdso_offset_##name - VDSO_LBASE + (unsigned long)(base)); \&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;1.提前更改&lt;code class=&quot;highlighter-rouge&quot;&gt;arch/arm64/kernel/vdso/gen_vdso_offsets.sh&lt;/code&gt;脚本 
+将如下一行&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;'s/^\([0-9a-fA-F]*\) . VDSO_\([a-zA-Z0-9_]*\)$/\#define vdso_offset_\2\t0x\1/p'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;更改为：&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;'s/^\([0-9a-fA-F]*\) . VDSO_\([a-zA-Z0-9_]*\)$/\#define vdso_offset_\2 0x\1/p'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;也就是，&lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;\t&quot;&lt;/code&gt; to &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot; &quot;(whitespace)&lt;/code&gt;
+ps: 如果已经执行过&lt;code class=&quot;highlighter-rouge&quot;&gt;make&lt;/code&gt;了遇到了该错误，可以执行&lt;code class=&quot;highlighter-rouge&quot;&gt;make clean&lt;/code&gt;清理生成的h文件，再重新编译&lt;/p&gt;
+
+&lt;p&gt;2.查看该源码文件，找到对应的头文件&lt;code class=&quot;highlighter-rouge&quot;&gt;vdso-offsets.h&lt;/code&gt; 
+该头文件是由上述脚本生成的，如果不想去改脚本，或者发现此时脚本已经没有效果(如果不会重新生成改头文件的话，确实没效果了已经)，就直接更改错误的头文件吧。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#include &amp;lt;generated/vdso-offsets.h&amp;gt;
+
+#define VDSO_SYMBOL(base, name)   \
+({   \
+(void *)(vdso_offset_##name - VDSO_LBASE + (unsigned long)(base)); \
+})
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;更改&lt;code class=&quot;highlighter-rouge&quot;&gt;kernel&lt;/code&gt;目录下的&lt;code class=&quot;highlighter-rouge&quot;&gt;include/generated/vdso-offsets.h&lt;/code&gt;
+将其中仅有的一行更改&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#define vdso_offset_sigtrampt0x04e0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;====»&amp;gt;&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#define vdso_offset_sigtramp 0x04e0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;## fatal error: dt-bindings/gpio/tegra-gpio.h: No such file or directory&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;In file included from arch/arm64/boot/dts/tegra132-flounder-xaxb.dts:3:0: 
+arch/arm64/boot/dts/tegra132-flounder-generic.dtsi:1:41: fatal error: dt-bindings/gpio/tegra-gpio.h: No such file or directory 
+&lt;code class=&quot;highlighter-rouge&quot;&gt;#&lt;/code&gt;include &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;&lt;/code&gt;dt-bindings/gpio/tegra-gpio.h&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;gt;&lt;/code&gt;
+compilation terminated. 
+make[1]: &lt;em&gt;** [arch/arm64/boot/dts/tegra132-flounder-xaxb.dtb] Error 1 
+make: **&lt;/em&gt; [dtbs] Error 2&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;发现该文件的第一句 &lt;code class=&quot;highlighter-rouge&quot;&gt;#include &amp;lt;dt-bindings/gpio/tegra-gpio.h&amp;gt;&lt;/code&gt;正是报错的地方 
+一般这些都是相对&lt;code class=&quot;highlighter-rouge&quot;&gt;include&lt;/code&gt;路径的相对路径，通常需要找到 &lt;code class=&quot;highlighter-rouge&quot;&gt;kernel&lt;/code&gt; 源码中该模块的&lt;code class=&quot;highlighter-rouge&quot;&gt;include&lt;/code&gt;路径 &lt;code class=&quot;highlighter-rouge&quot;&gt;arch/arm64/boot/dts/include&lt;/code&gt;
+(先查找了 &lt;code class=&quot;highlighter-rouge&quot;&gt;kernel&lt;/code&gt; 根目录下的 &lt;code class=&quot;highlighter-rouge&quot;&gt;include&lt;/code&gt; 文件夹，发现没有要找的文件，是否这个应该优先找本模块下的？)&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cd arch/arm64/boot/dts/include
+$ ls -ali dt-bindings 
+1451034 -rw-r--r--  1 ice  admin  34  2 20 22:31 dt-bindings 
+$ cat dt-bindings 
+../../../../../include/dt-bindings
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;到&lt;code class=&quot;highlighter-rouge&quot;&gt;../../../../../include/dt-bindings&lt;/code&gt;
+查看发现了我们需要的头文件，所以猜测此处文件本应该是一个 symlink 
+动手解决之！ 
+在当前的目录下：&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ln -s /Volumes/android/tegra/include/dt-bindings dt-bindings 
+$ ls -ali dt-bindings 
+1502515 lrwxr-xr-x  1 ice  admin    42  2 20 23:41 dt-bindings -&amp;gt; /Volumes/android/tegra/include/dt-bindings
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;继续编译。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;69 warnings generated. 
+HOSTLD  scripts/mod/modpost 
+ld: warning: PIE disabled. Absolute addressing (perhaps -mdynamic-no-	  pic) not allowed in code signed PIE, but used in _devtable_ptr374 from 	scripts/mod/file2alias.o. To fix this warning, don't compile with -	mdynamic-no-pic or link with -Wl,-no_pie 
+CHK     include/generated/compile.h 
+CHK     kernel/config_data.h 
+DTC     arch/arm64/boot/dts/tegra132-flounder-xaxb.dtb 
+DTC     arch/arm64/boot/dts/tegra132-flounder-xc.dtb 
+DTC     arch/arm64/boot/dts/tegra132-flounder-xdxepvt.dtb 
+DTC     arch/arm64/boot/dts/tegra132-flounder_lte-xaxbxcxdpvt.dtb 
+OBJCOPY arch/arm64/boot/Image 
+GZIP    arch/arm64/boot/Image.gz 
+DTC     arch/arm64/boot/dts/tegra132-flounder-xaxb.dtb 
+DTC     arch/arm64/boot/dts/tegra132-flounder-xc.dtb 
+DTC     arch/arm64/boot/dts/tegra132-flounder-xdxepvt.dtb 
+DTC     arch/arm64/boot/dts/tegra132-flounder_lte-xaxbxcxdpvt.dtb 
+CAT     arch/arm64/boot/Image.gz-dtb
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;至此，内核编译已经结束。&lt;/p&gt;
+
+&lt;p&gt;##后续
+参照&lt;a href=&quot;https://source.android.com/source/building-kernels.html&quot;&gt;官方链接&lt;/a&gt;的说明去你本机的目录中去找相应的预编译好的内核。 
+针对我的&lt;code class=&quot;highlighter-rouge&quot;&gt;Nexus 9&lt;/code&gt;而言：
+Device   | Binary Location
+——-  | —————————
+volantis | device/htc/flounder-kernel&lt;/p&gt;
+
+&lt;p&gt;查看你的&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;AOSP&amp;gt;/device/&amp;lt;vendor&amp;gt;/xx-kernel&lt;/code&gt;下显示的文件后缀名，将其备份(防止我们编译的内核启动不了) 
+将编译好的内核中具有同样扩展名的那个文件拷贝到该目录下。 
+对于&lt;code class=&quot;highlighter-rouge&quot;&gt;Nexus 9&lt;/code&gt;，拷贝&lt;code class=&quot;highlighter-rouge&quot;&gt;arch/arm64/boot/Image.gz-dtb &lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$AOSP_HOME&lt;/span&gt; 
+&lt;span class=&quot;nb&quot;&gt;source &lt;/span&gt;build/envSetup.sh 
+lunch aosp_flounder-userdebug 
+make bootimage 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;生成&lt;code class=&quot;highlighter-rouge&quot;&gt;bootimage&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[100% 2/2] Target boot image: out/target/product/flounder/boot.img
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+</description>
+        <pubDate>Fri, 10 Mar 2017 17:04:11 +0800</pubDate>
+        <link>http://localhost:4000/2017/03/Fix-issues-when-building-Android-kernel-for-Nexus-9/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/03/Fix-issues-when-building-Android-kernel-for-Nexus-9/</guid>
+        
+        <category>Android</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Hello World - Vno</title>
+        <description>&lt;h4 id=&quot;whats-this&quot;&gt;What’s this&lt;/h4&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/onevcat/vno-jekyll&quot;&gt;Vno Jekyll&lt;/a&gt; is a theme for &lt;a href=&quot;http://jekyllrb.com&quot;&gt;Jekyll&lt;/a&gt;. It is a port of my Ghost theme &lt;a href=&quot;https://github.com/onevcat/vno&quot;&gt;vno&lt;/a&gt;, which is originally developed from &lt;a href=&quot;https://github.com/daleanthony/uno&quot;&gt;Dale Anthony’s Uno&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h4 id=&quot;usage&quot;&gt;Usage&lt;/h4&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;git clone https://github.com/onevcat/vno-jekyll.git your_site
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;your_site
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;bundler install
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;bundler &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;jekyll serve
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Your site with &lt;code class=&quot;highlighter-rouge&quot;&gt;Vno Jekyll&lt;/code&gt; enabled should be accessible in http://127.0.0.1:4000.&lt;/p&gt;
+
+&lt;p&gt;For more information about Jekyll, please visit &lt;a href=&quot;http://jekyllrb.com&quot;&gt;Jekyll’s site&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h4 id=&quot;configuration&quot;&gt;Configuration&lt;/h4&gt;
+
+&lt;p&gt;All configuration could be done in &lt;code class=&quot;highlighter-rouge&quot;&gt;_config.yml&lt;/code&gt;. Remember you need to restart to serve the page when after changing the config file. Everything in the config file should be self-explanatory.&lt;/p&gt;
+
+&lt;h4 id=&quot;background-image-and-avatar&quot;&gt;Background image and avatar&lt;/h4&gt;
+
+&lt;p&gt;You could replace the background and avatar image in &lt;code class=&quot;highlighter-rouge&quot;&gt;assets/images&lt;/code&gt; folder to change them.&lt;/p&gt;
+
+&lt;h4 id=&quot;sites-using-vno&quot;&gt;Sites using Vno&lt;/h4&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://onevcat.com&quot;&gt;My blog&lt;/a&gt; is using &lt;code class=&quot;highlighter-rouge&quot;&gt;Vno Jekyll&lt;/code&gt; as well, you could see how it works in real. There are some other sites using the same theme. You can find them below:&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Site Name&lt;/th&gt;
+      &lt;th&gt;URL&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;OneV’s Den&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;http://onevcat.com&quot;&gt;http://onevcat.com&lt;/a&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;July Tang&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;http://onevcat.com&quot;&gt;http://blog.julytang.xyz&lt;/a&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;If you happen to be using this theme, welcome to &lt;a href=&quot;https://github.com/onevcat/vno-jekyll/pulls&quot;&gt;send me a pull request&lt;/a&gt; to add your site link here. :)&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h4 id=&quot;license&quot;&gt;License&lt;/h4&gt;
+
+&lt;p&gt;Great thanks to &lt;a href=&quot;https://github.com/daleanthony&quot;&gt;Dale Anthony&lt;/a&gt; and his &lt;a href=&quot;https://github.com/daleanthony/uno&quot;&gt;Uno&lt;/a&gt;. Vno Jekyll is based on Uno, and contains a lot of modification on page layout, animation, font and some more things I can not remember. Vno Jekyll is followed with Uno and be licensed as &lt;a href=&quot;http://creativecommons.org/licenses/by/4.0/&quot;&gt;Creative Commons Attribution 4.0 International&lt;/a&gt;. See the link for more information.&lt;/p&gt;
+</description>
+        <pubDate>Tue, 16 Feb 2016 14:32:24 +0800</pubDate>
+        <link>http://localhost:4000/2016/02/hello-world-vno/</link>
+        <guid isPermaLink="true">http://localhost:4000/2016/02/hello-world-vno/</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>Sample Post</title>
+        <description>&lt;p&gt;You’ll find this post in your &lt;code class=&quot;highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run &lt;code class=&quot;highlighter-rouge&quot;&gt;jekyll serve&lt;/code&gt;, which launches a web server and auto-regenerates your site when a file is updated.&lt;/p&gt;
+
+&lt;p&gt;To add new posts, simply add a file in the &lt;code class=&quot;highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory that follows the convention &lt;code class=&quot;highlighter-rouge&quot;&gt;YYYY-MM-DD-name-of-post.ext&lt;/code&gt; and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.&lt;/p&gt;
+
+&lt;p&gt;Jekyll also offers powerful support for code snippets:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Hi, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'Tom'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#=&amp;gt; prints 'Hi, Tom' to STDOUT.&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Check out the &lt;a href=&quot;http://jekyllrb.com/docs/home&quot;&gt;Jekyll docs&lt;/a&gt; for more info on how to get the most out of Jekyll. File all bugs/feature requests at &lt;a href=&quot;https://github.com/jekyll/jekyll&quot;&gt;Jekyll’s GitHub repo&lt;/a&gt;. If you have questions, you can ask them on &lt;a href=&quot;https://talk.jekyllrb.com/&quot;&gt;Jekyll Talk&lt;/a&gt;.&lt;/p&gt;
+
+</description>
+        <pubDate>Mon, 15 Feb 2016 14:32:24 +0800</pubDate>
+        <link>http://localhost:4000/2016/02/sample-post/</link>
+        <guid isPermaLink="true">http://localhost:4000/2016/02/sample-post/</guid>
+        
+        
+      </item>
+    
+  </channel>
+</rss>

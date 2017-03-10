@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <title>Fix issues when building Android kernel for Nexus 9</title>
+  <meta name="description" content="‘elf.h’ file not found安装homebrew安装libelfbrew install libelf拷贝 elf.h (二选一，两个都行) 	1. github	2. 修改/Volumes/android/aosp/external/elfutils/libelf/elf.h遇到了 featur...">
+  <meta name="author" content="Wei Wang">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Fix issues when building Android kernel for Nexus 9">
+  <meta name="twitter:description" content="‘elf.h’ file not found安装homebrew安装libelfbrew install libelf拷贝 elf.h (二选一，两个都行) 	1. github	2. 修改/Volumes/android/aosp/external/elfutils/libelf/elf.h遇到了 featur...">
+  
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Fix issues when building Android kernel for Nexus 9">
+  <meta property="og:description" content="‘elf.h’ file not found安装homebrew安装libelfbrew install libelf拷贝 elf.h (二选一，两个都行) 	1. github	2. 修改/Volumes/android/aosp/external/elfutils/libelf/elf.h遇到了 featur...">
+  
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png" />
+  <link href="/assets/images/favicon.png" rel="shortcut icon" type="image/png">
+  
+  <link rel="stylesheet" href="/css/main.css">
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="canonical" href="http://localhost:4000/2017/03/Fix-issues-when-building-Android-kernel-for-Nexus-9/">
+  <link rel="alternate" type="application/rss+xml" title="Luke is being a better man" href="http://localhost:4000/feed.xml">
+  
+  <meta name="google-site-verification" content="1-1ZlHoRvM0T2FqPbW2S-qLgYXN6rsn52kErlMPd_gw" />
+  
+</head>
+
+
+  <body>
+
+    <span class="mobile btn-mobile-menu">
+        <i class="fa fa-list btn-mobile-menu__icon"></i>
+        <i class="fa fa-angle-up btn-mobile-close__icon hidden"></i>
+    </span>
+    
+    <header class="panel-cover panel-cover--collapsed" style="background-image: url('/assets/images/background-cover.jpg')">
+  <div class="panel-main">
+
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+
+        <a href="/#blog" title="前往 Luke is being a better man 的主页" class="blog-button"><img src="/assets/images/avatar.jpg" width="80" alt="Luke is being a better man logo" class="panel-cover__logo logo" /></a>
+        <h1 class="panel-cover__title panel-title"><a href="/#blog" title="link to homepage for Luke is being a better man" class="blog-button">Luke is being a better man</a></h1>
+        
+        <span class="panel-cover__subtitle panel-subtitle">What I do, I understand.</span>
+        
+        <hr class="panel-cover__divider" />
+        <p class="panel-cover__description">Keep trying, then grow up better.</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary" />
+        
+        
+        <p class="panel-cover__description"><a href="https://github.com/onevcat/vno-jekyll" target="_blank">Download the theme</a></p>
+        
+        
+        <div class="navigation-wrapper">
+          <div>
+            <nav class="cover-navigation cover-navigation--primary">
+              <ul class="navigation">
+                <li class="navigation__item"><a href="/#blog" title="Visit blog" class="blog-button">Blog</a></li>
+                
+                  <li class="navigation__item"><a href="http://project.lukeat.me" target="_blank" title="My Projects">Projects</a></li>
+                
+              </ul>
+            </nav>
+          </div>
+          
+          <div><nav class="cover-navigation navigation--social">
+  <ul class="navigation">
+
+  
+
+  
+  <!-- Github -->
+  <li class="navigation__item">
+    <a href="https://github.com/icecoobe" title="@icecoobe 的 Github" target="_blank">
+      <i class='social fa fa-github'></i>
+      <span class="label">Github</span>
+    </a>
+  </li>
+  
+  
+  
+  <!-- Twitter -->
+  <li class="navigation__item">
+    <a href="http://twitter.com/lukechen_" title="@lukechen_" target="_blank">
+      <i class='social fa fa-twitter'></i>
+      <span class="label">Twitter</span>
+    </a>
+  </li>
+  
+
+  
+  <!-- Google Plus -->
+  <li class="navigation__item">
+    <a href="https://plus.google.com/117360010656398266906" rel="author" title="Google+" target="_blank">
+      <i class='social fa fa-google-plus-square'></i>
+      <span class="label">Google Plus</span>
+    </a>
+  </li>
+  
+
+  <!-- RSS -->
+  <li class="navigation__item">
+    <a href="/feed.xml" rel="author" title="RSS" target="_blank">
+      <i class='social fa fa-rss'></i>
+      <span class="label">RSS</span>
+    </a>
+  </li>
+
+  
+  <!-- Email -->
+  <li class="navigation__item">
+    <a href="mailto:lukeatme@126.com" title="Contact me">
+      <i class='social fa fa-envelope'></i>
+      <span class="label">Email</span>
+    </a>
+  </li>
+  
+
+  </ul>
+</nav>
+</div>
+        </div>
+      </div>
+    </div>
+    
+    
+    <div class="panel-cover--overlay cover-disabled"></div>
+    
+  </div>
+</header>
+
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner">
+            <article class="post-container post-container--single" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <div class="post-meta">
+      <time datetime="2017-03-10 17:04:11 +0800" itemprop="datePublished" class="post-meta__date date">2017-03-10</time> &#8226; <span class="post-meta__tags tags">Android</span>
+    </div>
+    <h1 class="post-title">Fix issues when building Android kernel for Nexus 9</h1>
+  </header>
+
+  <section class="post">
+    <h2 id="elfh-file-not-found">‘elf.h’ file not found</h2>
+<p><del>安装homebrew
+安装libelf
+brew install libelf</del>
+拷贝 elf.h (二选一，两个都行) 
+	1. <a href="https://gist.github.com/mlafeldt/3885346">github</a>
+	2. 修改<code class="highlighter-rouge">/Volumes/android/aosp/external/elfutils/libelf/elf.h</code>
+遇到了 <code class="highlighter-rouge">features.h 文件未找到的错误</code>，就将 <code class="highlighter-rouge">#include &lt;features.h&gt;</code> 一行注释掉。 
+将 <code class="highlighter-rouge">elf.h</code> 拷贝到 <code class="highlighter-rouge">/usr/include</code> 或者 <code class="highlighter-rouge">/usr/local/include</code> 中，推荐放在后者，放在前者的话系统升级时会覆盖。<em>目前发现 <code class="highlighter-rouge">libelf</code>不需要</em>。</p>
+
+<p>## arm-linux-androideabi-gcc: error: unrecognized command line option ‘-mgeneral-regs-only’
+这个错误是我的交叉编译环境错了，我写了一个脚本来设置了。</p>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c">#!/bin/sh</span>
+<span class="nb">export </span><span class="nv">AOSP_HOME</span><span class="o">=</span>/Volumes/android/aosp
+<span class="nb">export </span><span class="nv">ARCH</span><span class="o">=</span>arm64
+<span class="nb">export </span><span class="nv">CROSS_COMPILE</span><span class="o">=</span>aarch64-linux-android-
+<span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$AOSP_HOME</span>/prebuilts/gcc/darwin-x86/aarch64/aarch64-linux-android-4.9/bin:<span class="nv">$PATH</span>
+
+make flounder_defconfig
+</code></pre>
+</div>
+
+<p>## ’vdso_offset_sigtramp’ undeclared (first use in this function)</p>
+<blockquote>
+  <p>In file included from arch/arm64/kernel/signal.c:36:0: 
+arch/arm64/kernel/signal.c: In function ‘setup_return’: 
+/Volumes/android/tegra/arch/arm64/include/asm/vdso.h:34:11: error: ‘vdso_offset_sigtramp’ undeclared (first use in this function) 
+  (void *)(vdso_offset_##name - VDSO_LBASE + (unsigned long)(base)); \</p>
+</blockquote>
+
+<p>1.提前更改<code class="highlighter-rouge">arch/arm64/kernel/vdso/gen_vdso_offsets.sh</code>脚本 
+将如下一行</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>'s/^\([0-9a-fA-F]*\) . VDSO_\([a-zA-Z0-9_]*\)$/\#define vdso_offset_\2\t0x\1/p'
+</code></pre>
+</div>
+<p>更改为：</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>'s/^\([0-9a-fA-F]*\) . VDSO_\([a-zA-Z0-9_]*\)$/\#define vdso_offset_\2 0x\1/p'
+</code></pre>
+</div>
+<p>也就是，<code class="highlighter-rouge">"\t"</code> to <code class="highlighter-rouge">" "(whitespace)</code>
+ps: 如果已经执行过<code class="highlighter-rouge">make</code>了遇到了该错误，可以执行<code class="highlighter-rouge">make clean</code>清理生成的h文件，再重新编译</p>
+
+<p>2.查看该源码文件，找到对应的头文件<code class="highlighter-rouge">vdso-offsets.h</code> 
+该头文件是由上述脚本生成的，如果不想去改脚本，或者发现此时脚本已经没有效果(如果不会重新生成改头文件的话，确实没效果了已经)，就直接更改错误的头文件吧。</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>#include &lt;generated/vdso-offsets.h&gt;
+
+#define VDSO_SYMBOL(base, name)   \
+({   \
+(void *)(vdso_offset_##name - VDSO_LBASE + (unsigned long)(base)); \
+})
+</code></pre>
+</div>
+<p>更改<code class="highlighter-rouge">kernel</code>目录下的<code class="highlighter-rouge">include/generated/vdso-offsets.h</code>
+将其中仅有的一行更改</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>#define vdso_offset_sigtrampt0x04e0
+</code></pre>
+</div>
+<p>====»&gt;</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>#define vdso_offset_sigtramp 0x04e0
+</code></pre>
+</div>
+<p>## fatal error: dt-bindings/gpio/tegra-gpio.h: No such file or directory</p>
+<blockquote>
+  <p>In file included from arch/arm64/boot/dts/tegra132-flounder-xaxb.dts:3:0: 
+arch/arm64/boot/dts/tegra132-flounder-generic.dtsi:1:41: fatal error: dt-bindings/gpio/tegra-gpio.h: No such file or directory 
+<code class="highlighter-rouge">#</code>include <code class="highlighter-rouge">&lt;</code>dt-bindings/gpio/tegra-gpio.h<code class="highlighter-rouge">&gt;</code>
+compilation terminated. 
+make[1]: <em>** [arch/arm64/boot/dts/tegra132-flounder-xaxb.dtb] Error 1 
+make: **</em> [dtbs] Error 2</p>
+</blockquote>
+
+<p>发现该文件的第一句 <code class="highlighter-rouge">#include &lt;dt-bindings/gpio/tegra-gpio.h&gt;</code>正是报错的地方 
+一般这些都是相对<code class="highlighter-rouge">include</code>路径的相对路径，通常需要找到 <code class="highlighter-rouge">kernel</code> 源码中该模块的<code class="highlighter-rouge">include</code>路径 <code class="highlighter-rouge">arch/arm64/boot/dts/include</code>
+(先查找了 <code class="highlighter-rouge">kernel</code> 根目录下的 <code class="highlighter-rouge">include</code> 文件夹，发现没有要找的文件，是否这个应该优先找本模块下的？)</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>$ cd arch/arm64/boot/dts/include
+$ ls -ali dt-bindings 
+1451034 -rw-r--r--  1 ice  admin  34  2 20 22:31 dt-bindings 
+$ cat dt-bindings 
+../../../../../include/dt-bindings
+</code></pre>
+</div>
+<p>到<code class="highlighter-rouge">../../../../../include/dt-bindings</code>
+查看发现了我们需要的头文件，所以猜测此处文件本应该是一个 symlink 
+动手解决之！ 
+在当前的目录下：</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>$ ln -s /Volumes/android/tegra/include/dt-bindings dt-bindings 
+$ ls -ali dt-bindings 
+1502515 lrwxr-xr-x  1 ice  admin    42  2 20 23:41 dt-bindings -&gt; /Volumes/android/tegra/include/dt-bindings
+</code></pre>
+</div>
+<p>继续编译。</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>69 warnings generated. 
+HOSTLD  scripts/mod/modpost 
+ld: warning: PIE disabled. Absolute addressing (perhaps -mdynamic-no-	  pic) not allowed in code signed PIE, but used in _devtable_ptr374 from 	scripts/mod/file2alias.o. To fix this warning, don't compile with -	mdynamic-no-pic or link with -Wl,-no_pie 
+CHK     include/generated/compile.h 
+CHK     kernel/config_data.h 
+DTC     arch/arm64/boot/dts/tegra132-flounder-xaxb.dtb 
+DTC     arch/arm64/boot/dts/tegra132-flounder-xc.dtb 
+DTC     arch/arm64/boot/dts/tegra132-flounder-xdxepvt.dtb 
+DTC     arch/arm64/boot/dts/tegra132-flounder_lte-xaxbxcxdpvt.dtb 
+OBJCOPY arch/arm64/boot/Image 
+GZIP    arch/arm64/boot/Image.gz 
+DTC     arch/arm64/boot/dts/tegra132-flounder-xaxb.dtb 
+DTC     arch/arm64/boot/dts/tegra132-flounder-xc.dtb 
+DTC     arch/arm64/boot/dts/tegra132-flounder-xdxepvt.dtb 
+DTC     arch/arm64/boot/dts/tegra132-flounder_lte-xaxbxcxdpvt.dtb 
+CAT     arch/arm64/boot/Image.gz-dtb
+</code></pre>
+</div>
+<p>至此，内核编译已经结束。</p>
+
+<p>##后续
+参照<a href="https://source.android.com/source/building-kernels.html">官方链接</a>的说明去你本机的目录中去找相应的预编译好的内核。 
+针对我的<code class="highlighter-rouge">Nexus 9</code>而言：
+Device   | Binary Location
+——-  | —————————
+volantis | device/htc/flounder-kernel</p>
+
+<p>查看你的<code class="highlighter-rouge">&lt;AOSP&gt;/device/&lt;vendor&gt;/xx-kernel</code>下显示的文件后缀名，将其备份(防止我们编译的内核启动不了) 
+将编译好的内核中具有同样扩展名的那个文件拷贝到该目录下。 
+对于<code class="highlighter-rouge">Nexus 9</code>，拷贝<code class="highlighter-rouge">arch/arm64/boot/Image.gz-dtb </code></p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="nb">cd</span> <span class="nv">$AOSP_HOME</span> 
+<span class="nb">source </span>build/envSetup.sh 
+lunch aosp_flounder-userdebug 
+make bootimage 
+</code></pre>
+</div>
+<p>生成<code class="highlighter-rouge">bootimage</code></p>
+<div class="highlighter-rouge"><pre class="highlight"><code>[100% 2/2] Target boot image: out/target/product/flounder/boot.img
+</code></pre>
+</div>
+
+
+  </section>
+</article>
+
+<section class="read-more">
+   
+   
+   
+   
+   <div class="read-more-item">
+       <span class="read-more-item-dim">更早的文章</span>
+       <h2 class="post-list__post-title post-title"><a href="/2016/02/hello-world-vno/" title="link to Hello World - Vno">Hello World - Vno</a></h2>
+       <p class="excerpt">What’s thisVno Jekyll is a theme for Jekyll. It is a port of my Ghost theme vno, which is originally developed from Dale Anthony’s Uno.Usage$ git clone https://github.com/onevcat/vno-jekyll.git your_site$ cd your_site$ bundler install$ bundler exe...&hellip;</p>
+       <div class="post-list__meta"><time datetime="2016-02-16 15:32:24 +0900" class="post-list__meta--date date">2016-02-16</time> &#8226; <span class="post-list__meta--tags tags"></span><a class="btn-border-small" href=/2016/02/hello-world-vno/>继续阅读</a></div>
+   </div>
+   
+</section>
+
+<section class="post-comments">
+  
+    <div class="ds-thread" data-thread-key="/2017/03/Fix-issues-when-building-Android-kernel-for-Nexus-9/" data-title="Fix issues when building Android kernel for Nexus 9" data-url="http://localhost:4000/2017/03/Fix-issues-when-building-Android-kernel-for-Nexus-9/"></div>
+    <script type="text/javascript">
+        var duoshuoQuery = {short_name:"icecoobe"};
+        (function() {
+            var ds = document.createElement('script');
+            ds.type = 'text/javascript';ds.async = true;
+            ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+            ds.charset = 'UTF-8';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+        })();
+    </script>
+  
+  
+  
+  
+</section>
+
+
+            <section class="footer">
+    <footer>
+    	<span class="footer__copyright">本站点采用<a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享 署名-非商业性使用-相同方式共享 4.0 国际 许可协议</a></span>
+        <span class="footer__copyright">由 <a href="https://jekyllrb.com">Jekyll</a> 于 2017-03-10 生成，感谢 <a href="https://www.digitalocean.com/?refcode=30ed2d146762">Digital Ocean</a> 为本站提供稳定的 VPS 服务</span>
+        <span class="footer__copyright">本站由 <a href="http://lukeat.me">@luke</a> 创建，采用 <a href="https://github.com/onevcat/vno-jekyll">Vno - Jekyll</a> 作为主题，您可以在 GitHub 找到<a href="https://github.com/onevcat/OneV-s-Den">本站源码</a> - &copy; 2017</span>
+    </footer>
+</section>
+
+        </div>
+    </div>
+    
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+
+<script type="text/javascript" src="/js/main.js"></script>
+
+
+
+    
+  </body>
+
+</html>

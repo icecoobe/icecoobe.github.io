@@ -1,8 +1,49 @@
-title: Happy Hacking
-description: We all risk enslaved by technology, lets enjoy hacking right now.
-google_analytics: 
-show_downloads: true
-theme: jekyll-theme-hacker
+# Basic
+title: Luke is being a better man
+subtitle: What I do, I understand.
+welcome_message: <a href="https://github.com/onevcat/vno-jekyll" target="_blank">Download the theme</a>
+description: Keep trying, then grow up better.
+creator: <a href="http://lukeat.me">@luke</a>
 
-gems:
-  - jekyll-mentions
+url: "http://lukeat.me"
+
+permalink: /:year/:month/:title/
+
+# Format
+highlighter: rouge
+
+# supported colors: blue, green, purple, red, orange or slate. If you need clear, leave it empty.
+cover_color: 
+
+# The blog button should not be removed.
+blog_button:
+    title: Blog
+    description: Visit blog
+
+# Navigation buttons in the front page.
+nav:
+    - {title: Projects, description: My Projects, url: 'http://project.lukeat.me'}
+    # - {title: Another Button, description: A button, url: 'http://example.com'}
+
+# Pagination
+gems: [jekyll-paginate]
+paginate: 10
+paginate_path: "page/:num/"
+
+# Comment
+comment:
+    # disqus: vno-jekyll
+    duoshuo: icecoobe
+    
+# Social
+social:
+    #weibo: onevcat
+    github: icecoobe
+    twitter: lukechen_
+    gplus: 117360010656398266906
+    mail: lukeatme@126.com
+
+# Google Analytics
+ga:
+    # id: your_ga_id
+    # host: your_host

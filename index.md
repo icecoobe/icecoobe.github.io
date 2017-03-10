@@ -1,6 +1,6 @@
-# Happy Hacking
+---
+title: This is my title
+layout: post
+---
 
-```
-[section .data]
-db 'Hello World!', 0x0D, 0x0A
-```
+Here is my page.
