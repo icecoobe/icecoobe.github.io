@@ -1,8 +1,8 @@
 # Basic
-title: Luke is being a better man
+title: Lucky Luke
 subtitle: What I do, I understand.
-welcome_message: <a href="https://github.com/onevcat/vno-jekyll" target="_blank">Download the theme</a>
-description: Keep trying, then grow up better.
+welcome_message:
+description: 
 creator: <a href="http://lukeat.me">@luke</a>
 
 url: "http://lukeat.me"
@@ -22,7 +22,8 @@ blog_button:
 
 # Navigation buttons in the front page.
 nav:
-    - {title: Projects, description: My Projects, url: 'http://project.lukeat.me'}
+    # - {title: Projects, description: My Projects, url: 'http://project.lukeat.me'}
+    - {title: About me, description: Luke, url: 'http://lukeat.me'}
     # - {title: Another Button, description: A button, url: 'http://example.com'}
 
 # Pagination
