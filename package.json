@@ -16,6 +16,23 @@
     "hexo-renderer-stylus": "^0.3.1",
     "hexo-server": "^0.2.0",
     "in-publish": "^2.0.0",
-    "pug": "^2.0.0-beta11"
+    "minimatch": "^3.0.3",
+    "node-gyp": "^3.5.0",
+    "node-sass": "^4.5.0",
+    "nopt": "^4.0.1",
+    "nunjucks": "^3.0.0",
+    "pug": "^2.0.0-beta11",
+    "rimraf": "^2.6.1",
+    "sass-graph": "^2.1.2",
+    "semver": "^5.3.0",
+    "sshpk": "^1.11.0",
+    "strip-indent": "^2.0.0",
+    "stylus": "^0.54.5",
+    "swig": "^1.4.2",
+    "titlecase": "^1.1.2",
+    "uglify-js": "^2.8.12",
+    "uuid": "^3.0.1",
+    "which": "^1.2.12",
+    "window-size": "^0.3.0"
   }
 }
