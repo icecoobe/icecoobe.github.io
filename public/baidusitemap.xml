@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+
+    
+    
+    
+  <url>
+    <loc>http://lukeat.me/2017/03/13/C-pointer/</loc>
+    <lastmod>2017-03-14T12:15:12.000Z</lastmod>
+    <data>
+        <display>
+        <title>C pointer</title>
+        <pubTime>2017-03-13T02:35:41.000Z</pubTime>
+        
+        <tag>C</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://lukeat.me/2017/02/10/Fix_issues_when_building_Android_kernel_for_Nexus_9/</loc>
+    <lastmod>2017-03-14T12:15:12.000Z</lastmod>
+    <data>
+        <display>
+        <title>Fix issues when building android kernel for Nexus 9 on Mac OS X</title>
+        <pubTime>2017-02-10T02:35:41.000Z</pubTime>
+        
+        <tag>Android kernel</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://lukeat.me/2017/03/14/hello-world/</loc>
+    <lastmod>2017-03-14T12:15:12.000Z</lastmod>
+    <data>
+        <display>
+        <title>Hello World</title>
+        <pubTime>2017-03-14T12:15:12.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+</urlset>
