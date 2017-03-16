@@ -72,5 +72,7 @@ path: sitemap.xml
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repo: git@github.com:icecoobe/icecoobe.github.io.git
-  branch: master
+  repo: 
+    github: git@github.com:icecoobe/icecoobe.github.io.git,master
+    coding: git@git.coding.net:icecoobe/icecoobe.git,master
+

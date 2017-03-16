@@ -1,16 +1,15 @@
 ---
-title: Fix issues when building android kernel for Nexus 9 on Mac OS X 
+title: Build Android Kernel of ARM64 on OS X
 date: 2017-02-10 10:35:41
-tags: Android kernel
+tags: 
+  - Android kernel
+  - OSX
 ---
 
 ### ‘elf.h’ file not found
-~~安装homebrew
-安装libelf
-brew install libelf~~
-拷贝 elf.h (二选一，两个都行) 
-	1. [github](https://gist.github.com/mlafeldt/3885346)
-	2. 修改`/Volumes/android/aosp/external/elfutils/libelf/elf.h`
+拷贝 elf.h (二选一，两个都行)
+- [github](https://gist.github.com/mlafeldt/3885346)
+- 修改`/Volumes/android/aosp/external/elfutils/libelf/elf.h`
 遇到了 `features.h 文件未找到的错误`，就将 `#include <features.h>` 一行注释掉。 
 将 `elf.h` 拷贝到 `/usr/include` 或者 `/usr/local/include` 中，推荐放在后者，放在前者的话系统升级时会覆盖。*目前发现 `libelf`不需要*。 
 
