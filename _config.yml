@@ -68,6 +68,25 @@ theme: next
 sitemap:
 path: sitemap.xml
 
+# 站点建立时间
+since: 2013
+
+# RSS
+# prerequisite:npm install hexo-generator-feed --save
+#feed:
+#  type: atom
+#  path: atom.xml
+#  limit: 20
+#  hub:
+#  content:
+
+# Extensions
+## Plugins: http://hexo.io/plugins/
+plugins:
+	hexo-generate-feed
+
+#disqus_shortname: disqus_lukeatme
+
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:

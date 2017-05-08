@@ -1,6 +1,6 @@
 ---
 title: Build Android Kernel of ARM64 on OS X
-date: 2017-02-10 10:35:41
+date: 2017-03-20 10:35:41
 tags: 
   - Android kernel
   - OSX
