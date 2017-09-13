@@ -91,7 +91,9 @@ plugins:
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repo: 
+  repo:
     github: git@github.com:icecoobe/icecoobe.github.io.git,master
-    coding: git@git.coding.net:icecoobe/icecoobe.git,master
+#    github: https://github.com/icecoobe/icecoobe.github.io.git
+#    github: git@github.com:icecoobe/icecoobe.github.io.git,master
+#    coding: git@git.coding.net:icecoobe/icecoobe.git,master
 
