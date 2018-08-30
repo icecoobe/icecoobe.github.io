@@ -1,15 +1,17 @@
 ---
-title: sizeof
+title: About sizeof
 date: 2017-09-11 10:03:04
 categories: 重拾 C 语言
 tags: C
 ---
 
 `sizeof` **只能引用自动分配的变量**，而不是一个指针可能指向的数据。
-自动分配的或者静态的数组，都是可以使用`sizeof`来运算的。
-因为sizeof是在编译期确定的，所以手动`malloc`的指针是sizeof无法处理的。
+自动分配的或者静态的数组，都是可以使用 `sizeof` 来运算的。
+因为sizeof是在编译期确定的，所以手动 `malloc` 的指针是 `sizeof` 无法处理的。
+<!-- more -->
 
-```
+### Sample
+``` C
 #include <stdio.h> 
 int a[10];
 
@@ -30,8 +32,8 @@ void print_pointer_size(int data[])
 }
 ```
 
-运行
-```
+### 运行
+``` 
 valgrind --leak-check=full ./test
 ==5666== Memcheck, a memory error detector
 ==5666== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.

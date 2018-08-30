@@ -7,7 +7,7 @@ tags: C
 
 本文描述的编码规范是个人比较喜欢的一些方式，基本上在个人项目中会优先采用，特此记录。
 我比较喜欢 GNU/Linux 项目中的编码规范，所以本文中随处可见它们的影子~
-
+<!-- more -->
 ## 如何选择合适的 Style
 我个人一般是按照如下的优先级顺序来选择合适的编码规范：
 1. 当前项目的编码规范
@@ -23,7 +23,7 @@ Some orgnization doesn't suggest include guards for non-public header files.
 I guess this is due to possible name confliction of MACROs.
 Cause `_XX_H_` may be reserved for some situation, I take `XX_H_` for granted.
 foo.h
-```
+``` c
 #ifndef FOO_H_
 #define FOO_H_
 
@@ -32,7 +32,7 @@ foo.h
 
 ## constant variables
 learned from google, use `k_` as prefix of constant variables.
-```
+``` c
 const int32_t k_max_thread_count = 10;
 ```
 
@@ -42,13 +42,13 @@ const int32_t k_max_thread_count = 10;
 - do not use typedef on enum definition.
 
 ## each definition per line.
-```
+``` c
 int32_t a;
 char c;
 ```
 
 ## `*` close to var
-```
+``` c
 int32_t *p; // good
 int32_t* p; // bad
 ```
@@ -56,12 +56,12 @@ int32_t* p; // bad
 
 ## type-cast
 preserve blank before casting and var.
-```
+``` c
 int32_t *p = (int32_t *) malloc(...);
 ```
 
 ## a function without parameters must use `(void)`
-```
+``` c
 int32_t test(void)
 {
     ...
@@ -69,20 +69,20 @@ int32_t test(void)
 ```
 
 ## if statement
-```
+``` c
 a = 1;
 if (xxxx) { // bad
 
 }
 ```
-```
+``` c
 a = 1;
 
 if (xxx) { // good
 
 }
 ```
-```
+``` c
 a = 1;
 
 if (xxx) {
@@ -90,7 +90,7 @@ if (xxx) {
 }
 b = 1; // bad
 ```
-```
+``` c
 a = 1;
 
 if (xxx) {
