@@ -85,7 +85,7 @@ since: 2013
 plugins:
 	hexo-generate-feed
 
-#disqus_shortname: disqus_lukeatme
+disqus_shortname: 
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
