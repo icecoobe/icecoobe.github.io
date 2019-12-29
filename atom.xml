@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Luke At Me</title>
+  <subtitle>What I do, I understand.</subtitle>
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://lukeat.me/"/>
+  <updated>2019-12-29T15:29:08.278Z</updated>
+  <id>http://lukeat.me/</id>
+  
+  <author>
+    <name>Luke Chen</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>C language coding style</title>
+    <link href="http://lukeat.me/2017/09/13/C-language-coding-style/"/>
+    <id>http://lukeat.me/2017/09/13/C-language-coding-style/</id>
+    <published>2017-09-13T14:50:08.000Z</published>
+    <updated>2019-12-29T15:29:08.278Z</updated>
+    
+    <content type="html"><![CDATA[<p>本文描述的编码规范是个人比较喜欢的一些方式，基本上在个人项目中会优先采用，特此记录。<br>我比较喜欢 GNU/Linux 项目中的编码规范，所以本文中随处可见它们的影子~<br><a id="more"></a></p>
+<h2 id="如何选择合适的-Style"><a href="#如何选择合适的-Style" class="headerlink" title="如何选择合适的 Style"></a>如何选择合适的 Style</h2><p>我个人一般是按照如下的优先级顺序来选择合适的编码规范：</p>
+<ol>
+<li>当前项目的编码规范</li>
+<li>组织的编码规范</li>
+<li>系统平台的编码规范 (比如 Windows 平台和 Linux 平台下 C 的编码规范是有所不同的)</li>
+<li>本文要描述的规范，也是个人比较喜欢的一些方式</li>
+</ol>
+<h2 id="命名方式"><a href="#命名方式" class="headerlink" title="命名方式"></a>命名方式</h2><p>lowercase except enum members.</p>
+<h2 id="include-guard"><a href="#include-guard" class="headerlink" title="include guard"></a>include guard</h2><p>Some orgnization doesn’t suggest include guards for non-public header files.<br>I guess this is due to possible name confliction of MACROs.<br>Cause <code>_XX_H_</code> may be reserved for some situation, I take <code>XX_H_</code> for granted.<br>foo.h<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> FOO_H_</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> FOO_H_</span></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div></pre></td></tr></table></figure></p>
+<h2 id="constant-variables"><a href="#constant-variables" class="headerlink" title="constant variables"></a>constant variables</h2><p>learned from google, use <code>k_</code> as prefix of constant variables.<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> <span class="keyword">int32_t</span> k_max_thread_count = <span class="number">10</span>;</div></pre></td></tr></table></figure></p>
+<h2 id="enum"><a href="#enum" class="headerlink" title="enum"></a>enum</h2><ul>
+<li>each member is in uppercase.</li>
+<li>enum name is in lowercase.</li>
+<li>do not use typedef on enum definition.</li>
+</ul>
+<h2 id="each-definition-per-line"><a href="#each-definition-per-line" class="headerlink" title="each definition per line."></a>each definition per line.</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int32_t</span> a;</div><div class="line"><span class="keyword">char</span> c;</div></pre></td></tr></table></figure>
+<h2 id="close-to-var"><a href="#close-to-var" class="headerlink" title="* close to var"></a><code>*</code> close to var</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int32_t</span> *p; <span class="comment">// good</span></div><div class="line"><span class="keyword">int32_t</span>* p; <span class="comment">// bad</span></div></pre></td></tr></table></figure>
+<h2 id="type-cast"><a href="#type-cast" class="headerlink" title="type-cast"></a>type-cast</h2><p>preserve blank before casting and var.<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int32_t</span> *p = (<span class="keyword">int32_t</span> *) <span class="built_in">malloc</span>(...);</div></pre></td></tr></table></figure></p>
+<h2 id="a-function-without-parameters-must-use-void"><a href="#a-function-without-parameters-must-use-void" class="headerlink" title="a function without parameters must use (void)"></a>a function without parameters must use <code>(void)</code></h2><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int32_t</span> test(<span class="keyword">void</span>)</div><div class="line">&#123;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="if-statement"><a href="#if-statement" class="headerlink" title="if statement"></a>if statement</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">a = <span class="number">1</span>;</div><div class="line"><span class="keyword">if</span> (xxxx) &#123; <span class="comment">// bad</span></div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">a = <span class="number">1</span>;</div><div class="line"></div><div class="line"><span class="keyword">if</span> (xxx) &#123; <span class="comment">// good</span></div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">a = <span class="number">1</span>;</div><div class="line"></div><div class="line"><span class="keyword">if</span> (xxx) &#123;</div><div class="line"></div><div class="line">&#125;</div><div class="line">b = <span class="number">1</span>; <span class="comment">// bad</span></div></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">a = <span class="number">1</span>;</div><div class="line"></div><div class="line"><span class="keyword">if</span> (xxx) &#123;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">b = <span class="number">1</span>; <span class="comment">// good</span></div></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;本文描述的编码规范是个人比较喜欢的一些方式，基本上在个人项目中会优先采用，特此记录。&lt;br&gt;我比较喜欢 GNU/Linux 项目中的编码规范，所以本文中随处可见它们的影子~&lt;br&gt;
+    
+    </summary>
+    
+      <category term="重拾 C 语言" scheme="http://lukeat.me/categories/%E9%87%8D%E6%8B%BE-C-%E8%AF%AD%E8%A8%80/"/>
+    
+    
+      <category term="C" scheme="http://lukeat.me/tags/C/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>About sizeof</title>
+    <link href="http://lukeat.me/2017/09/11/sizeof/"/>
+    <id>http://lukeat.me/2017/09/11/sizeof/</id>
+    <published>2017-09-11T02:03:04.000Z</published>
+    <updated>2019-12-29T15:29:08.278Z</updated>
+    
+    <content type="html"><![CDATA[<p><code>sizeof</code> <strong>只能引用自动分配的变量</strong>，而不是一个指针可能指向的数据。<br>自动分配的或者静态的数组，都是可以使用 <code>sizeof</code> 来运算的。<br>因为sizeof是在编译期确定的，所以手动 <code>malloc</code> 的指针是 <code>sizeof</code> 无法处理的。<br><a id="more"></a></p>
+<h3 id="Sample"><a href="#Sample" class="headerlink" title="Sample"></a>Sample</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt; </span></span></div><div class="line"><span class="keyword">int</span> a[<span class="number">10</span>];</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">print_pointer_size</span><span class="params">(<span class="keyword">int</span> data[])</span></span>;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span></div><div class="line">&#123; </div><div class="line">    <span class="keyword">int</span> *p = <span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">int</span>) * <span class="number">10</span>); </div><div class="line">    <span class="built_in">printf</span>(<span class="string">"%u, %u\n"</span>, <span class="keyword">sizeof</span>(a), <span class="keyword">sizeof</span>(p));</div><div class="line">    print_pointer_size(a);</div><div class="line">    <span class="built_in">free</span>(p);</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">print_pointer_size</span><span class="params">(<span class="keyword">int</span> data[])</span></span></div><div class="line">&#123;</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"[%s] size of data: %u\n"</span>, __FUNC__, <span class="keyword">sizeof</span>(data));</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">valgrind --leak-check=full ./test</div><div class="line">==5666== Memcheck, a memory error detector</div><div class="line">==5666== Copyright (C) 2002-2017, and GNU GPL&apos;d, by Julian Seward et al.</div><div class="line">==5666== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info</div><div class="line">==5666== Command: ./test</div><div class="line">==5666== </div><div class="line">[main] size of array a: 40, size of allocated pointer: 8</div><div class="line">[print_pointer_size] size of data: 8</div><div class="line">==5666== </div><div class="line">==5666== HEAP SUMMARY:</div><div class="line">==5666==     in use at exit: 0 bytes in 0 blocks</div><div class="line">==5666==   total heap usage: 2 allocs, 2 frees, 1,064 bytes allocated</div><div class="line">==5666== </div><div class="line">==5666== All heap blocks were freed -- no leaks are possible</div><div class="line">==5666== </div><div class="line">==5666== For counts of detected and suppressed errors, rerun with: -v</div><div class="line">==5666== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)</div></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;code&gt;sizeof&lt;/code&gt; &lt;strong&gt;只能引用自动分配的变量&lt;/strong&gt;，而不是一个指针可能指向的数据。&lt;br&gt;自动分配的或者静态的数组，都是可以使用 &lt;code&gt;sizeof&lt;/code&gt; 来运算的。&lt;br&gt;因为sizeof是在编译期确定的，所以手动 &lt;code&gt;malloc&lt;/code&gt; 的指针是 &lt;code&gt;sizeof&lt;/code&gt; 无法处理的。&lt;br&gt;
+    
+    </summary>
+    
+      <category term="重拾 C 语言" scheme="http://lukeat.me/categories/%E9%87%8D%E6%8B%BE-C-%E8%AF%AD%E8%A8%80/"/>
+    
+    
+      <category term="C" scheme="http://lukeat.me/tags/C/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>试着聊聊并发和并行</title>
+    <link href="http://lukeat.me/2017/09/05/%E8%AF%95%E7%9D%80%E8%81%8A%E8%81%8A%E5%B9%B6%E5%8F%91%E5%92%8C%E5%B9%B6%E8%A1%8C/"/>
+    <id>http://lukeat.me/2017/09/05/试着聊聊并发和并行/</id>
+    <published>2017-09-05T15:16:18.000Z</published>
+    <updated>2019-12-29T15:29:08.279Z</updated>
+    
+    <content type="html"><![CDATA[<p>我们都知道电影就是依据人眼的视觉停留的特点而发明的，在一秒钟内切换超过24张连拍的静态图片人们就看不到切换图片期间的黑色间隔，从而达到动态的视觉效果。<br>所以，人类是很容易“欺骗”的，嘴上不承认，身体却很诚实地接纳了。</p>
+<p>早期的计算机是单处理器系统，操作系统也是不支持多任务的。<br>后来出现了分时多任务系统，它采用了时间片轮转的方式，在一定的时间间隔内响应多个用户的操作。<br>类似电影，如果这个响应间隔可以做到足够小，那么用户就会觉得他在独占这台计算机。</p>
+<p>比较著名的分时多任务系统就是 UNIX，而那个时候还没有多核处理器。于是，分时多任务处理的设计一直被操作系统设计者沿用至今。<br>接下来，我们该聊聊并发 (Concurrency) 了。<br>我没有找到关于并发的标准定义，但是我阅读过K&amp;R的 UNIX 论文，我相信并发就是源自于分时多任务的理念。<br>它强调同一时间段有多个任务在同时进行。</p>
+<p>直到后来，随着 CPU 技术的升级，我们迎来了多核处理器。<br>人们设想可以将任务分割成N多份子任务，然后交给多个处理器核心去运行，最后再整合处理结果。<br>这个效果非常接近硬件系统的组成，硬件系统一般由多个独立的工作模块或者局部电路组成，他们可以在同一时间点互不干扰地工作，最后通过并行接口传输的时候也是互不干扰的。<br>整个工作期间它们可以做到完全地同时。<br>所以，软件术语中的并行可以理解成硬件系统的并行效果，它的英文(Parallelism)也很类似并行接口(Paralle Port)的英文。</p>
+<p>以前我自己也总是理不清这些术语，我希望您在阅读本文之后既可以正确地说出英文术语，也真正理解了它们。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;我们都知道电影就是依据人眼的视觉停留的特点而发明的，在一秒钟内切换超过24张连拍的静态图片人们就看不到切换图片期间的黑色间隔，从而达到动态的视觉效果。&lt;br&gt;所以，人类是很容易“欺骗”的，嘴上不承认，身体却很诚实地接纳了。&lt;/p&gt;
+&lt;p&gt;早期的计算机是单处理器系统，操作系统
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>关于脚本文件的第一行 - Shebang</title>
+    <link href="http://lukeat.me/2017/03/28/%E5%85%B3%E4%BA%8E%E8%84%9A%E6%9C%AC%E6%96%87%E4%BB%B6%E7%9A%84%E7%AC%AC%E4%B8%80%E8%A1%8C-Shebang/"/>
+    <id>http://lukeat.me/2017/03/28/关于脚本文件的第一行-Shebang/</id>
+    <published>2017-03-28T07:33:31.000Z</published>
+    <updated>2019-12-29T15:29:08.279Z</updated>
+    
+    <content type="html"><![CDATA[<p>我们在编写脚本的时候，通常会在第一行添加如下的语句：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">#! /bin/bash</div><div class="line">...</div></pre></td></tr></table></figure></p>
+<p>这是一个 POSIX 惯例，它有一个名称 — <strong><em>Shebang</em></strong></p>
+<p>在 POSIX 类系统中，如果文件第一行包含 Shebang 标志，该行后面的内容会被 POSIX 系统的程序加载器识别为解释器指令，并调用该解释器。<br>同时，将该文件传递给解释器作为参数。<br>因为文件第一行以 <code>#!</code> 开头，所以解释器(大部分解释器将<code>#</code>开头的语句作为注释)会忽略该行。</p>
+<h3 id="起源"><a href="#起源" class="headerlink" title="起源"></a>起源</h3><p>关于它的起源，一直没有官方的说法，估计是约定俗成的惯例了，权当了解下吧。</p>
+<ul>
+<li>很多脚本主要是 shell 脚本，所以取其前面的几个字母 「She」；</li>
+<li><code>#</code>和<code>!</code>的读音为 <code>Sharp</code> 和 <code>bang</code></li>
+</ul>
+<h3 id="例外"><a href="#例外" class="headerlink" title="例外"></a>例外</h3><p>有的解释器指令不会忽略 <code>#</code>，比如 <code>cat</code>，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">#! /bin/cat</div><div class="line"></div><div class="line">Hello World!</div></pre></td></tr></table></figure></p>
+<p><code>cat</code> 会将该文件的所有内容输出。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>这里列举一下 <code>Shebang</code> 的几点要求：</p>
+<ul>
+<li><code>#!</code> 必须连接在一起，它的术语是 <code>Shebang</code>，也称为 <code>hashbang</code></li>
+<li><code>#!</code> 一句必须在文件的最开始，第一行</li>
+<li><code>#</code> 开头的语句一般情况下会被当成注释而忽略，所以<code>Shebang</code> 对文件的内容是没有影响的</li>
+<li><code>#!</code> 开头的一行会设置解释器运行环境</li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;我们在编写脚本的时候，通常会在第一行添加如下的语句：&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;lin
+    
+    </summary>
+    
+      <category term="POSIX" scheme="http://lukeat.me/categories/POSIX/"/>
+    
+    
+      <category term="POSIX" scheme="http://lukeat.me/tags/POSIX/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Build Android Kernel of ARM64 on OS X</title>
+    <link href="http://lukeat.me/2017/03/20/Build-Android-Kernel-of-ARM64-on-OS-X/"/>
+    <id>http://lukeat.me/2017/03/20/Build-Android-Kernel-of-ARM64-on-OS-X/</id>
+    <published>2017-03-20T02:35:41.000Z</published>
+    <updated>2019-12-29T15:29:08.277Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="elf-h-file-not-found"><a href="#elf-h-file-not-found" class="headerlink" title="elf.h file not found"></a>elf.h file not found</h2><p>拷贝 elf.h (二选一，两个都行)</p>
+<ul>
+<li><a href="https://gist.github.com/mlafeldt/3885346" target="_blank" rel="external">GitHub</a></li>
+<li>修改 <code>/Volumes/android/aosp/external/elfutils/libelf/elf.h</code><br>遇到了 <code>features.h 文件未找到的错误</code>，就将 <code>#include &lt;features.h&gt;</code> 一行注释掉。<br>将 <code>elf.h</code> 拷贝到 <code>/usr/include</code> 或者 <code>/usr/local/include</code> 中，推荐放在后者，放在前者的话系统升级时会覆盖。<em>目前发现 <code>libelf</code>不需要</em>。 <a id="more"></a>
+</li>
+</ul>
+<h2 id="arm-linux-androideabi-gcc-error-unrecognized-command-line-option-‘-mgeneral-regs-only’"><a href="#arm-linux-androideabi-gcc-error-unrecognized-command-line-option-‘-mgeneral-regs-only’" class="headerlink" title="arm-linux-androideabi-gcc: error: unrecognized command line option ‘-mgeneral-regs-only’"></a>arm-linux-androideabi-gcc: error: unrecognized command line option ‘-mgeneral-regs-only’</h2><p>这个错误是我的交叉编译环境错了，我写了一个脚本来设置了。 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">#!/bin/sh</div><div class="line">export AOSP_HOME=/Volumes/android/aosp</div><div class="line">export ARCH=arm64</div><div class="line">export CROSS_COMPILE=aarch64-linux-android-</div><div class="line">export PATH=$AOSP_HOME/prebuilts/gcc/darwin-x86/aarch64/aarch64-linux-android-4.9/bin:$PATH</div><div class="line"></div><div class="line">make flounder_defconfig</div></pre></td></tr></table></figure>
+<h2 id="‘vdso-offset-sigtramp’-undeclared-first-use-in-this-function"><a href="#‘vdso-offset-sigtramp’-undeclared-first-use-in-this-function" class="headerlink" title="‘vdso_offset_sigtramp’ undeclared (first use in this function)"></a>‘vdso_offset_sigtramp’ undeclared (first use in this function)</h2><blockquote>
+<p>In file included from arch/arm64/kernel/signal.c:36:0:<br>arch/arm64/kernel/signal.c: In function ‘setup_return’:<br>/Volumes/android/tegra/arch/arm64/include/asm/vdso.h:34:11: error: ‘vdso_offset_sigtramp’ undeclared (first use in this function)<br>  (void *)(vdso<em>offset</em>##name - VDSO_LBASE + (unsigned long)(base)); \</p>
+</blockquote>
+<p>1.提前更改 <code>arch/arm64/kernel/vdso/gen_vdso_offsets.sh</code> 脚本<br>将如下一行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&apos;s/^\([0-9a-fA-F]*\) . VDSO_\([a-zA-Z0-9_]*\)$/\#define vdso_offset_\2\t0x\1/p&apos;</div></pre></td></tr></table></figure>
+<p>更改为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&apos;s/^\([0-9a-fA-F]*\) . VDSO_\([a-zA-Z0-9_]*\)$/\#define vdso_offset_\2 0x\1/p&apos;</div></pre></td></tr></table></figure>
+<p>也就是，<code>&quot;\t&quot;</code> to <code>&quot; &quot;(whitespace)</code><br>ps: 如果已经执行过 <code>make</code> 了遇到了该错误，可以执行 <code>make clean</code> 清理生成的 h 文件，再重新编译 </p>
+<p>2.查看该源码文件，找到对应的头文件 <code>vdso-offsets.h</code><br>该头文件是由上述脚本生成的，如果不想去改脚本，或者发现此时脚本已经没有效果(如果不会重新生成改头文件的话，确实没效果了已经)，就直接更改错误的头文件吧。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">#include &lt;generated/vdso-offsets.h&gt;</div><div class="line"></div><div class="line">#define VDSO_SYMBOL(base, name)   \</div><div class="line">(&#123;   \</div><div class="line">(void *)(vdso_offset_##name - VDSO_LBASE + (unsigned long)(base)); \</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>更改<code>kernel</code>目录下的<code>include/generated/vdso-offsets.h</code><br>将其中仅有的一行更改 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">#define vdso_offset_sigtrampt0x04e0</div></pre></td></tr></table></figure>
+<p>====&gt;&gt;&gt;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">#define vdso_offset_sigtramp 0x04e0</div></pre></td></tr></table></figure>
+<h2 id="fatal-error-dt-bindings-gpio-tegra-gpio-h-No-such-file-or-directory"><a href="#fatal-error-dt-bindings-gpio-tegra-gpio-h-No-such-file-or-directory" class="headerlink" title="fatal error: dt-bindings/gpio/tegra-gpio.h: No such file or directory"></a>fatal error: dt-bindings/gpio/tegra-gpio.h: No such file or directory</h2><blockquote>
+<p>In file included from arch/arm64/boot/dts/tegra132-flounder-xaxb.dts:3:0:<br>arch/arm64/boot/dts/tegra132-flounder-generic.dtsi:1:41: fatal error: dt-bindings/gpio/tegra-gpio.h: No such file or directory<br><code>#</code>include <code>&lt;</code>dt-bindings/gpio/tegra-gpio.h<code>&gt;</code><br>compilation terminated.<br>make[1]: <strong><em> [arch/arm64/boot/dts/tegra132-flounder-xaxb.dtb] Error 1<br>make: </em></strong> [dtbs] Error 2</p>
+</blockquote>
+<p>发现该文件的第一句 <code>#include &lt;dt-bindings/gpio/tegra-gpio.h&gt;</code>正是报错的地方<br>一般这些都是相对<code>include</code>路径的相对路径，通常需要找到 <code>kernel</code> 源码中该模块的 <code>include</code> 路径 <code>arch/arm64/boot/dts/include</code><br>(先查找了 <code>kernel</code> 根目录下的 <code>include</code> 文件夹，发现没有要找的文件，是否这个应该优先找本模块下的？) </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ cd arch/arm64/boot/dts/include</div><div class="line">$ ls -ali dt-bindings </div><div class="line">1451034 -rw-r--r--  1 ice  admin  34  2 20 22:31 dt-bindings </div><div class="line">$ cat dt-bindings </div><div class="line">../../../../../include/dt-bindings</div></pre></td></tr></table></figure>
+<p>到 <code>../../../../../include/dt-bindings</code><br>查看发现了我们需要的头文件，所以猜测此处文件本应该是一个 symlink<br>动手解决之！<br>在当前的目录下： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ ln -s /Volumes/android/tegra/include/dt-bindings dt-bindings </div><div class="line">$ ls -ali dt-bindings </div><div class="line">1502515 lrwxr-xr-x  1 ice  admin    42  2 20 23:41 dt-bindings -&gt; /Volumes/android/tegra/include/dt-bindings</div></pre></td></tr></table></figure>
+<p>继续编译。 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">69 warnings generated. </div><div class="line">HOSTLD  scripts/mod/modpost </div><div class="line">ld: warning: PIE disabled. Absolute addressing (perhaps -mdynamic-no-	  pic) not allowed in code signed PIE, but used in _devtable_ptr374 from 	scripts/mod/file2alias.o. To fix this warning, don&apos;t compile with -	mdynamic-no-pic or link with -Wl,-no_pie </div><div class="line">CHK     include/generated/compile.h </div><div class="line">CHK     kernel/config_data.h </div><div class="line">DTC     arch/arm64/boot/dts/tegra132-flounder-xaxb.dtb </div><div class="line">DTC     arch/arm64/boot/dts/tegra132-flounder-xc.dtb </div><div class="line">DTC     arch/arm64/boot/dts/tegra132-flounder-xdxepvt.dtb </div><div class="line">DTC     arch/arm64/boot/dts/tegra132-flounder_lte-xaxbxcxdpvt.dtb </div><div class="line">OBJCOPY arch/arm64/boot/Image </div><div class="line">GZIP    arch/arm64/boot/Image.gz </div><div class="line">DTC     arch/arm64/boot/dts/tegra132-flounder-xaxb.dtb </div><div class="line">DTC     arch/arm64/boot/dts/tegra132-flounder-xc.dtb </div><div class="line">DTC     arch/arm64/boot/dts/tegra132-flounder-xdxepvt.dtb </div><div class="line">DTC     arch/arm64/boot/dts/tegra132-flounder_lte-xaxbxcxdpvt.dtb </div><div class="line">CAT     arch/arm64/boot/Image.gz-dtb</div></pre></td></tr></table></figure>
+<p>至此，内核编译已经结束。</p>
+<h2 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h2><p>参照<a href="https://source.android.com/source/building-kernels.html" target="_blank" rel="external">官方链接</a>的说明去你本机的目录中去找相应的预编译好的内核。<br>针对我的 <code>Nexus 9</code> 而言：<br>Device   | Binary Location<br>——-  | —————————<br>volantis | device/htc/flounder-kernel</p>
+<p>查看你的 <code>&lt;AOSP&gt;/device/&lt;vendor&gt;/xx-kernel</code> 下显示的文件后缀名，将其备份(防止我们编译的内核启动不了)<br>将编译好的内核中具有同样扩展名的那个文件拷贝到该目录下。<br>对于 <code>Nexus 9</code>，拷贝 <code>arch/arm64/boot/Image.gz-dtb</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">cd $AOSP_HOME </div><div class="line">source build/envSetup.sh </div><div class="line">lunch aosp_flounder-userdebug </div><div class="line">make bootimage</div></pre></td></tr></table></figure>
+<p>生成 <code>bootimage</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[100% 2/2] Target boot image: out/target/product/flounder/boot.img</div></pre></td></tr></table></figure></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;elf-h-file-not-found&quot;&gt;&lt;a href=&quot;#elf-h-file-not-found&quot; class=&quot;headerlink&quot; title=&quot;elf.h file not found&quot;&gt;&lt;/a&gt;elf.h file not found&lt;/h2&gt;&lt;p&gt;拷贝 elf.h (二选一，两个都行)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://gist.github.com/mlafeldt/3885346&quot;&gt;GitHub&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;修改 &lt;code&gt;/Volumes/android/aosp/external/elfutils/libelf/elf.h&lt;/code&gt;&lt;br&gt;遇到了 &lt;code&gt;features.h 文件未找到的错误&lt;/code&gt;，就将 &lt;code&gt;#include &amp;lt;features.h&amp;gt;&lt;/code&gt; 一行注释掉。&lt;br&gt;将 &lt;code&gt;elf.h&lt;/code&gt; 拷贝到 &lt;code&gt;/usr/include&lt;/code&gt; 或者 &lt;code&gt;/usr/local/include&lt;/code&gt; 中，推荐放在后者，放在前者的话系统升级时会覆盖。&lt;em&gt;目前发现 &lt;code&gt;libelf&lt;/code&gt;不需要&lt;/em&gt;。
+    
+    </summary>
+    
+    
+      <category term="Android kernel" scheme="http://lukeat.me/tags/Android-kernel/"/>
+    
+      <category term="OSX" scheme="http://lukeat.me/tags/OSX/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>简单的引导程序</title>
+    <link href="http://lukeat.me/2017/03/17/%E7%AE%80%E5%8D%95%E7%9A%84%E5%BC%95%E5%AF%BC%E7%A8%8B%E5%BA%8F/"/>
+    <id>http://lukeat.me/2017/03/17/简单的引导程序/</id>
+    <published>2017-03-17T15:10:37.000Z</published>
+    <updated>2019-12-29T15:29:08.279Z</updated>
+    
+    <content type="html"><![CDATA[<p>引导程序是我们开发操作系统的第一步，这里我贴出一个示例，来演示引导程序包含哪些内容。</p>
+<p>这是一个简单的引导程序 bootloader, 它只用来显示一串字符, 然后什么都不做。<br>虽然很精简, 但是你也可以使用 nasm 编译它, 然后写入到 u 盘里在真机上实验。<br>后续添加代码注释。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line">section mbr vstart=0x7c00</div><div class="line">start:</div><div class="line">    ;; init regs</div><div class="line">    mov ax, cs</div><div class="line">    mov ds, ax</div><div class="line">    mov es, ax</div><div class="line">    mov ss, ax</div><div class="line">    mov fs, ax</div><div class="line">    mov sp, 0x7c00</div><div class="line"></div><div class="line">.clearscreen:</div><div class="line">    ;; clear screen</div><div class="line">    mov ax, 0x600</div><div class="line">    mov bx, 700</div><div class="line">    mov cx, 0</div><div class="line">    mov dx, 0x184f</div><div class="line">    int 0x10</div><div class="line"></div><div class="line">.getcursorpos:</div><div class="line">    ;; get position of cursor</div><div class="line">    mov ah, 3</div><div class="line">    mov bh, 0</div><div class="line">    int 0x10</div><div class="line"></div><div class="line">.print:</div><div class="line">    ;; print message at the cursor</div><div class="line">    mov ax, message</div><div class="line">    mov bp, ax</div><div class="line"></div><div class="line">    mov cx, 8</div><div class="line">    mov ax, 0x1301</div><div class="line">    mov bx, 0x2</div><div class="line">    int 0x10</div><div class="line"></div><div class="line">.halt:</div><div class="line">    ;; endless loop, doing nothing</div><div class="line">    jmp $</div><div class="line"></div><div class="line">.data:</div><div class="line">    message db &quot;MBR Demo&quot;</div><div class="line">    times 510 - ($-$$) db 0</div><div class="line">    db 0x55, 0xaa</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引导程序是我们开发操作系统的第一步，这里我贴出一个示例，来演示引导程序包含哪些内容。&lt;/p&gt;
+&lt;p&gt;这是一个简单的引导程序 bootloader, 它只用来显示一串字符, 然后什么都不做。&lt;br&gt;虽然很精简, 但是你也可以使用 nasm 编译它, 然后写入到 u 盘里在真机
+    
+    </summary>
+    
+      <category term="操作系统实验" scheme="http://lukeat.me/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%AE%9E%E9%AA%8C/"/>
+    
+    
+      <category term="NASM" scheme="http://lukeat.me/tags/NASM/"/>
+    
+      <category term="OS" scheme="http://lukeat.me/tags/OS/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>const指针</title>
+    <link href="http://lukeat.me/2017/03/17/const%E6%8C%87%E9%92%88/"/>
+    <id>http://lukeat.me/2017/03/17/const指针/</id>
+    <published>2017-03-17T09:04:22.000Z</published>
+    <updated>2019-12-29T15:29:08.278Z</updated>
+    
+    <content type="html"><![CDATA[<p>指针本质上也是一个整型的变量, 但是声明指针的时候如果遇到 <code>const</code> 修饰, 情况会略复杂一点。<br><a id="more"></a></p>
+<h3 id="疑问"><a href="#疑问" class="headerlink" title="疑问"></a>疑问</h3><p>在阅读本文之前，请先看以下几个声明语句：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> a = <span class="number">10</span>;  </div><div class="line">  </div><div class="line"><span class="keyword">int</span> <span class="keyword">const</span> *d = &amp;a; <span class="comment">// 0  </span></div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span>* b = &amp;a; <span class="comment">// 1  </span></div><div class="line"><span class="keyword">int</span>* <span class="keyword">const</span> c = &amp;a; <span class="comment">// 2  </span></div><div class="line">  </div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span>* <span class="keyword">const</span> p = &amp;a; <span class="comment">// 3  </span></div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> <span class="keyword">const</span> *p2 = &amp;a; <span class="comment">// 4</span></div></pre></td></tr></table></figure>
+<p>上述声明的指针变量, 哪些指针是常量, 哪些指针指向的内容是常量, 或者哪些指针和其指向的内容都是常量？<br>如果你也不是很清楚，请跟着我一起回顾下 C 语言的基础知识吧!</p>
+<h3 id="指针声明的语法"><a href="#指针声明的语法" class="headerlink" title="指针声明的语法"></a>指针声明的语法</h3><p>我们先从声明指针变量的语法来讲，一般声明一个指针变量的语法为：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">type * p = xxx;</div></pre></td></tr></table></figure>
+<p>主要存在两种写法：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">type* p = xxx;</div><div class="line">type *p = xxx;</div></pre></td></tr></table></figure>
+<p>一般人都倾向于将 <code>*</code> 写在靠近类型的一侧, 也就是第一种声明方式, 我自己也是如此。<br>这种声明方式的好处是，让人一下子就注意到这个变量是指向某种类型的指针。<br>但是，如果你对指针声明的知识理解的不到位的话，很多时候，采用第1种声明方式是有风险的。<br>比如以下这句</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span>* a, b, c;</div></pre></td></tr></table></figure>
+<p>就很容易造成误解, 有的人可能会误以为这是三个 <code>int</code> 型指针，而编码者本身的意图可能也是如此，但是事实并非如此。<br>它的含义是，a 为指向 <code>int</code> 变量的指针，b 和 c 均为一个 <code>int</code> 型变量。<br>如果采用方式 2 来声明的话，就会明显一点。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> *a, b, c;</div></pre></td></tr></table></figure>
+<p>有两个解决的方法:</p>
+<ul>
+<li>每个变量都单独声明</li>
+<li>使用 <code>typedef</code> 定义指针类型，再使用该类型来声明指针</li>
+</ul>
+<h3 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h3><p>接下来，我们分解以下声明语句，之后大家就会有一个清晰的认识了。<br>其实，理解指针声明的关键在于理解这个 <code>*</code>。<br><strong><em>`</em><code>是间接访问操作符，它只能间接引用指针变量；</code><em>a` 本身就是一个表达式，表示间接访问a指向的内存单元</em></strong>。<br>接下来，我们依据这个理念来理解 <code>const</code> 指针的声明方式。<br>语句一</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> <span class="keyword">int</span>* b = &amp;a;</div></pre></td></tr></table></figure>
+<p>它等价于</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">const</span> <span class="title">int</span> <span class="params">(*b)</span> </span>= &amp;a;</div></pre></td></tr></table></figure>
+<p><code>*b</code> 表明 b 是一个指针变量<br><code>int (*b)</code> 表明通过 b 能够间接访问到一个整型变量，也就是说 b 为一个整型的指针<br><code>const int (*b)</code> 则表明该整型变量是一个 <code>const</code> 常量。<br><strong><em>所以，b 是一个 <code>int</code> 类型的指针，它本身不是常量；它指向的整型变量为常量</em></strong></p>
+<p>语句二</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span>* <span class="keyword">const</span> c = &amp;a;</div></pre></td></tr></table></figure>
+<p>它等价于</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> *(<span class="keyword">const</span> c) = &amp;a;</div></pre></td></tr></table></figure>
+<p><code>const c</code> 说明 c 是一个常量<br><code>*(const c)</code> 说明这个常量是一个指针<br>最后，<code>int</code> 关键字表明这个指针指向一个整型变量。<br><strong><em>所以，c 是一个 <code>int</code> 型指针，这个指针存储的地址值是常量，不可更改；c 指向的整型内存单元不是常量，可更改</em></strong><br>语句三、四<br>它们是等价的，上述举例只是为了引出两种声明的写法。我们选其中一句来说明。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> <span class="keyword">int</span>* <span class="keyword">const</span> p1 = &amp;a;</div></pre></td></tr></table></figure>
+<p>它等价于</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">const int (*(const p1)) = &amp;a;</div></pre></td></tr></table></figure>
+<p><code>const p1</code> 表明 p1 是一个常量；<br><code>*(const p1)</code> 表明 p1 是一个指针；<br><code>int *(const p1)</code> 表明 p1 是一个整型指针；<br><code>const int *(const p1)</code> 则跟语句一是类似的，表明 p1 指向的内存单元也是一个常量。<br>所以，这里<strong><em>p1和p1指向的内存单元都是常量</em></strong></p>
+<h3 id="结束语"><a href="#结束语" class="headerlink" title="结束语"></a>结束语</h3><p>至此，用 <code>const</code> 来声明指针的几种情况均已经阐述完毕。其中，对于声明语句 0 我没有进行分解，留给自己复习检查用～</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;指针本质上也是一个整型的变量, 但是声明指针的时候如果遇到 &lt;code&gt;const&lt;/code&gt; 修饰, 情况会略复杂一点。&lt;br&gt;
+    
+    </summary>
+    
+      <category term="重拾 C 语言" scheme="http://lukeat.me/categories/%E9%87%8D%E6%8B%BE-C-%E8%AF%AD%E8%A8%80/"/>
+    
+    
+      <category term="C" scheme="http://lukeat.me/tags/C/"/>
+    
+      <category term="指针" scheme="http://lukeat.me/tags/%E6%8C%87%E9%92%88/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Build Android Kernel of x86 on OS X</title>
+    <link href="http://lukeat.me/2017/03/15/Build-Android-Kernel-of-x86-on-OS-X/"/>
+    <id>http://lukeat.me/2017/03/15/Build-Android-Kernel-of-x86-on-OS-X/</id>
+    <published>2017-03-15T08:52:25.000Z</published>
+    <updated>2019-12-29T15:29:08.277Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Target-Platform"><a href="#Target-Platform" class="headerlink" title="Target Platform"></a>Target Platform</h2><p>nexus player, x86</p>
+<h2 id="Mac-Hardware"><a href="#Mac-Hardware" class="headerlink" title="Mac Hardware"></a>Mac Hardware</h2><p>MacBook Pro (Retina, 13-inch, Early 2015)</p>
+<h2 id="System"><a href="#System" class="headerlink" title="System"></a>System</h2><p>macOS Sierra, 10.12.3</p>
+<h2 id="OS-X-SDK"><a href="#OS-X-SDK" class="headerlink" title="OS X SDK"></a>OS X SDK</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">ls -ali /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs</div><div class="line">1915385 drwxr-xr-x  5 root  wheel  170  2  9 09:37 .</div><div class="line">1914962 drwxr-xr-x  5 root  wheel  170 12 16 06:44 ..</div><div class="line">1915386 drwxr-xr-x  5 root  wheel  170  9 17  2017 MacOSX.sdk</div><div class="line">2086424 drwxr-xr-x@ 5 ice   wheel  170 11 16  2015 MacOSX10.11.sdk</div><div class="line">1948121 lrwxr-xr-x  1 root  wheel   10  2  9 09:08 MacOSX10.12.sdk -&gt; MacOSX.sdk</div></pre></td></tr></table></figure>
+<h2 id="Issue-fixing"><a href="#Issue-fixing" class="headerlink" title="Issue fixing"></a>Issue fixing</h2><h3 id="elf-h-file-not-found"><a href="#elf-h-file-not-found" class="headerlink" title="elf.h file not found"></a><code>elf.h</code> file not found</h3><p>拷贝 <code>elf.h</code> (二选一，两个都行)</p>
+<ul>
+<li><a href="https://gist.github.com/mlafeldt/3885346" target="_blank" rel="external">GitHub</a></li>
+<li><code>/Volumes/android/aosp/external/elfutils/libelf/elf.h</code>，遇到了<code>features.h</code>文件未找到的错误，就将<code>#include &lt;features.h&gt;</code> 一行注释掉。<br>将 <code>elf.h</code> 拷贝到 <code>/usr/include</code> 或者 <code>/usr/local/include</code> 中，推荐放在后者，放在前者的话系统升级时会覆盖。<br>目前发现 <code>libelf</code> 不需要。</li>
+</ul>
+<h3 id="byteswap-h-file-not-found"><a href="#byteswap-h-file-not-found" class="headerlink" title="byteswap.h file not found"></a><code>byteswap.h</code> file not found</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">In file included from arch/x86/tools/relocs_32.c:1:</div><div class="line">arch/x86/tools/relocs.h:13:10: fatal error: &apos;byteswap.h&apos; file not found</div><div class="line">#include &lt;byteswap.h&gt;</div><div class="line">         ^</div><div class="line">1 error generated.</div><div class="line">make[1]: *** [arch/x86/tools/relocs_32.o] Error 1</div></pre></td></tr></table></figure>
+<p>解决：拷贝对应文件夹中的头文件</p>
+<h3 id="arch-x86-kernel-cpu-capflags-c-69-31-error-expected-expression-before-‘-’-token"><a href="#arch-x86-kernel-cpu-capflags-c-69-31-error-expected-expression-before-‘-’-token" class="headerlink" title="arch/x86/kernel/cpu/capflags.c:69:31: error: expected expression before ‘]’ token"></a>arch/x86/kernel/cpu/capflags.c:69:31: error: expected expression before ‘]’ token</h3><p>  [X86_FEATURE_PCLMULQDQ (4<em>32+]  = “pclmulqdq (4</em>32+”,<br>等这一个C文件里的错误。</p>
+<p>根据Linux的github里面的sh脚本，这个文件应该是根据<br><code>arch/x86/kernel/cpu/mkcapflags.sh</code><br><code>/Volumes/android/x86_64/arch/x86/include/asm/cpufeature.h</code> 和生成的。</p>
+<p>解决：拷贝对应文件夹中的<code>capflags.c</code></p>
+<h3 id="下载-GNU-sed-和-stat"><a href="#下载-GNU-sed-和-stat" class="headerlink" title="下载 GNU sed 和 stat"></a>下载 <code>GNU sed</code> 和 <code>stat</code></h3><p>起初未替换<code>sed</code> 和<code>stat</code>， 内核编译好了，启动不了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">brew install gnu-sed coreutils</div></pre></td></tr></table></figure></p>
+<p>设置环境变量<code>PATH</code><br>按照上述安装命令中生成的提示信息设置<code>PATH</code></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;Target-Platform&quot;&gt;&lt;a href=&quot;#Target-Platform&quot; class=&quot;headerlink&quot; title=&quot;Target Platform&quot;&gt;&lt;/a&gt;Target Platform&lt;/h2&gt;&lt;p&gt;nexus player, x86&lt;
+    
+    </summary>
+    
+    
+      <category term="OSX" scheme="http://lukeat.me/tags/OSX/"/>
+    
+      <category term="Android Kernel" scheme="http://lukeat.me/tags/Android-Kernel/"/>
+    
+  </entry>
+  
+</feed>

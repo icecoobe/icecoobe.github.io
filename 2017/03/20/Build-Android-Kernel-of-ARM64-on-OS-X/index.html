@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.4.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/avatar.jpg?v=6.4.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon32x32.ico?v=6.4.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon16x16.ico?v=6.4.0">
+
+
+  <link rel="mask-icon" href="/images/favicon.ico?v=6.4.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.4.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="elf.h file not found拷贝 elf.h (二选一，两个都行)
+
+GitHub
+修改 /Volumes/android/aosp/external/elfutils/libelf/elf.h遇到了 features.h 文件未找到的错误，就将 #include &amp;lt;features.h&amp;gt; 一行注释掉。将 elf.h 拷贝到 /usr/include 或者 /usr/loc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Build Android Kernel of ARM64 on OS X">
+<meta property="og:url" content="http://lukeat.me/2017/03/20/Build-Android-Kernel-of-ARM64-on-OS-X/index.html">
+<meta property="og:site_name" content="Luke At Me">
+<meta property="og:description" content="elf.h file not found拷贝 elf.h (二选一，两个都行)
+
+GitHub
+修改 /Volumes/android/aosp/external/elfutils/libelf/elf.h遇到了 features.h 文件未找到的错误，就将 #include &amp;lt;features.h&amp;gt; 一行注释掉。将 elf.h 拷贝到 /usr/include 或者 /usr/loc">
+<meta property="og:updated_time" content="2019-12-29T15:29:08.277Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Build Android Kernel of ARM64 on OS X">
+<meta name="twitter:description" content="elf.h file not found拷贝 elf.h (二选一，两个都行)
+
+GitHub
+修改 /Volumes/android/aosp/external/elfutils/libelf/elf.h遇到了 features.h 文件未找到的错误，就将 #include &amp;lt;features.h&amp;gt; 一行注释掉。将 elf.h 拷贝到 /usr/include 或者 /usr/loc">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Luke At Me" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://lukeat.me/2017/03/20/Build-Android-Kernel-of-ARM64-on-OS-X/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Build Android Kernel of ARM64 on OS X | Luke At Me</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Luke At Me</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <h1 class="site-subtitle" itemprop="description">What I do, I understand.</h1>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />Home</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />About</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />Tags</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />Categories</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />Archives</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://lukeat.me/2017/03/20/Build-Android-Kernel-of-ARM64-on-OS-X/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Luke Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Luke At Me">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Build Android Kernel of ARM64 on OS X
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2017-03-20 10:35:41" itemprop="dateCreated datePublished" datetime="2017-03-20T10:35:41+08:00">2017-03-20</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-12-29 23:29:08" itemprop="dateModified" datetime="2019-12-29T23:29:08+08:00">2019-12-29</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="elf-h-file-not-found"><a href="#elf-h-file-not-found" class="headerlink" title="elf.h file not found"></a>elf.h file not found</h2><p>拷贝 elf.h (二选一，两个都行)</p>
+<ul>
+<li><a href="https://gist.github.com/mlafeldt/3885346" target="_blank" rel="external">GitHub</a></li>
+<li>修改 <code>/Volumes/android/aosp/external/elfutils/libelf/elf.h</code><br>遇到了 <code>features.h 文件未找到的错误</code>，就将 <code>#include &lt;features.h&gt;</code> 一行注释掉。<br>将 <code>elf.h</code> 拷贝到 <code>/usr/include</code> 或者 <code>/usr/local/include</code> 中，推荐放在后者，放在前者的话系统升级时会覆盖。<em>目前发现 <code>libelf</code>不需要</em>。 <a id="more"></a>
+</li>
+</ul>
+<h2 id="arm-linux-androideabi-gcc-error-unrecognized-command-line-option-‘-mgeneral-regs-only’"><a href="#arm-linux-androideabi-gcc-error-unrecognized-command-line-option-‘-mgeneral-regs-only’" class="headerlink" title="arm-linux-androideabi-gcc: error: unrecognized command line option ‘-mgeneral-regs-only’"></a>arm-linux-androideabi-gcc: error: unrecognized command line option ‘-mgeneral-regs-only’</h2><p>这个错误是我的交叉编译环境错了，我写了一个脚本来设置了。 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">#!/bin/sh</div><div class="line">export AOSP_HOME=/Volumes/android/aosp</div><div class="line">export ARCH=arm64</div><div class="line">export CROSS_COMPILE=aarch64-linux-android-</div><div class="line">export PATH=$AOSP_HOME/prebuilts/gcc/darwin-x86/aarch64/aarch64-linux-android-4.9/bin:$PATH</div><div class="line"></div><div class="line">make flounder_defconfig</div></pre></td></tr></table></figure>
+<h2 id="‘vdso-offset-sigtramp’-undeclared-first-use-in-this-function"><a href="#‘vdso-offset-sigtramp’-undeclared-first-use-in-this-function" class="headerlink" title="‘vdso_offset_sigtramp’ undeclared (first use in this function)"></a>‘vdso_offset_sigtramp’ undeclared (first use in this function)</h2><blockquote>
+<p>In file included from arch/arm64/kernel/signal.c:36:0:<br>arch/arm64/kernel/signal.c: In function ‘setup_return’:<br>/Volumes/android/tegra/arch/arm64/include/asm/vdso.h:34:11: error: ‘vdso_offset_sigtramp’ undeclared (first use in this function)<br>  (void *)(vdso<em>offset</em>##name - VDSO_LBASE + (unsigned long)(base)); \</p>
+</blockquote>
+<p>1.提前更改 <code>arch/arm64/kernel/vdso/gen_vdso_offsets.sh</code> 脚本<br>将如下一行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&apos;s/^\([0-9a-fA-F]*\) . VDSO_\([a-zA-Z0-9_]*\)$/\#define vdso_offset_\2\t0x\1/p&apos;</div></pre></td></tr></table></figure>
+<p>更改为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&apos;s/^\([0-9a-fA-F]*\) . VDSO_\([a-zA-Z0-9_]*\)$/\#define vdso_offset_\2 0x\1/p&apos;</div></pre></td></tr></table></figure>
+<p>也就是，<code>&quot;\t&quot;</code> to <code>&quot; &quot;(whitespace)</code><br>ps: 如果已经执行过 <code>make</code> 了遇到了该错误，可以执行 <code>make clean</code> 清理生成的 h 文件，再重新编译 </p>
+<p>2.查看该源码文件，找到对应的头文件 <code>vdso-offsets.h</code><br>该头文件是由上述脚本生成的，如果不想去改脚本，或者发现此时脚本已经没有效果(如果不会重新生成改头文件的话，确实没效果了已经)，就直接更改错误的头文件吧。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">#include &lt;generated/vdso-offsets.h&gt;</div><div class="line"></div><div class="line">#define VDSO_SYMBOL(base, name)   \</div><div class="line">(&#123;   \</div><div class="line">(void *)(vdso_offset_##name - VDSO_LBASE + (unsigned long)(base)); \</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>更改<code>kernel</code>目录下的<code>include/generated/vdso-offsets.h</code><br>将其中仅有的一行更改 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">#define vdso_offset_sigtrampt0x04e0</div></pre></td></tr></table></figure>
+<p>====&gt;&gt;&gt;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">#define vdso_offset_sigtramp 0x04e0</div></pre></td></tr></table></figure>
+<h2 id="fatal-error-dt-bindings-gpio-tegra-gpio-h-No-such-file-or-directory"><a href="#fatal-error-dt-bindings-gpio-tegra-gpio-h-No-such-file-or-directory" class="headerlink" title="fatal error: dt-bindings/gpio/tegra-gpio.h: No such file or directory"></a>fatal error: dt-bindings/gpio/tegra-gpio.h: No such file or directory</h2><blockquote>
+<p>In file included from arch/arm64/boot/dts/tegra132-flounder-xaxb.dts:3:0:<br>arch/arm64/boot/dts/tegra132-flounder-generic.dtsi:1:41: fatal error: dt-bindings/gpio/tegra-gpio.h: No such file or directory<br><code>#</code>include <code>&lt;</code>dt-bindings/gpio/tegra-gpio.h<code>&gt;</code><br>compilation terminated.<br>make[1]: <strong><em> [arch/arm64/boot/dts/tegra132-flounder-xaxb.dtb] Error 1<br>make: </em></strong> [dtbs] Error 2</p>
+</blockquote>
+<p>发现该文件的第一句 <code>#include &lt;dt-bindings/gpio/tegra-gpio.h&gt;</code>正是报错的地方<br>一般这些都是相对<code>include</code>路径的相对路径，通常需要找到 <code>kernel</code> 源码中该模块的 <code>include</code> 路径 <code>arch/arm64/boot/dts/include</code><br>(先查找了 <code>kernel</code> 根目录下的 <code>include</code> 文件夹，发现没有要找的文件，是否这个应该优先找本模块下的？) </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ cd arch/arm64/boot/dts/include</div><div class="line">$ ls -ali dt-bindings </div><div class="line">1451034 -rw-r--r--  1 ice  admin  34  2 20 22:31 dt-bindings </div><div class="line">$ cat dt-bindings </div><div class="line">../../../../../include/dt-bindings</div></pre></td></tr></table></figure>
+<p>到 <code>../../../../../include/dt-bindings</code><br>查看发现了我们需要的头文件，所以猜测此处文件本应该是一个 symlink<br>动手解决之！<br>在当前的目录下： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ ln -s /Volumes/android/tegra/include/dt-bindings dt-bindings </div><div class="line">$ ls -ali dt-bindings </div><div class="line">1502515 lrwxr-xr-x  1 ice  admin    42  2 20 23:41 dt-bindings -&gt; /Volumes/android/tegra/include/dt-bindings</div></pre></td></tr></table></figure>
+<p>继续编译。 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">69 warnings generated. </div><div class="line">HOSTLD  scripts/mod/modpost </div><div class="line">ld: warning: PIE disabled. Absolute addressing (perhaps -mdynamic-no-	  pic) not allowed in code signed PIE, but used in _devtable_ptr374 from 	scripts/mod/file2alias.o. To fix this warning, don&apos;t compile with -	mdynamic-no-pic or link with -Wl,-no_pie </div><div class="line">CHK     include/generated/compile.h </div><div class="line">CHK     kernel/config_data.h </div><div class="line">DTC     arch/arm64/boot/dts/tegra132-flounder-xaxb.dtb </div><div class="line">DTC     arch/arm64/boot/dts/tegra132-flounder-xc.dtb </div><div class="line">DTC     arch/arm64/boot/dts/tegra132-flounder-xdxepvt.dtb </div><div class="line">DTC     arch/arm64/boot/dts/tegra132-flounder_lte-xaxbxcxdpvt.dtb </div><div class="line">OBJCOPY arch/arm64/boot/Image </div><div class="line">GZIP    arch/arm64/boot/Image.gz </div><div class="line">DTC     arch/arm64/boot/dts/tegra132-flounder-xaxb.dtb </div><div class="line">DTC     arch/arm64/boot/dts/tegra132-flounder-xc.dtb </div><div class="line">DTC     arch/arm64/boot/dts/tegra132-flounder-xdxepvt.dtb </div><div class="line">DTC     arch/arm64/boot/dts/tegra132-flounder_lte-xaxbxcxdpvt.dtb </div><div class="line">CAT     arch/arm64/boot/Image.gz-dtb</div></pre></td></tr></table></figure>
+<p>至此，内核编译已经结束。</p>
+<h2 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h2><p>参照<a href="https://source.android.com/source/building-kernels.html" target="_blank" rel="external">官方链接</a>的说明去你本机的目录中去找相应的预编译好的内核。<br>针对我的 <code>Nexus 9</code> 而言：<br>Device   | Binary Location<br>——-  | —————————<br>volantis | device/htc/flounder-kernel</p>
+<p>查看你的 <code>&lt;AOSP&gt;/device/&lt;vendor&gt;/xx-kernel</code> 下显示的文件后缀名，将其备份(防止我们编译的内核启动不了)<br>将编译好的内核中具有同样扩展名的那个文件拷贝到该目录下。<br>对于 <code>Nexus 9</code>，拷贝 <code>arch/arm64/boot/Image.gz-dtb</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">cd $AOSP_HOME </div><div class="line">source build/envSetup.sh </div><div class="line">lunch aosp_flounder-userdebug </div><div class="line">make bootimage</div></pre></td></tr></table></figure>
+<p>生成 <code>bootimage</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[100% 2/2] Target boot image: out/target/product/flounder/boot.img</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android-kernel/" rel="tag"># Android kernel</a>
+          
+            <a href="/tags/OSX/" rel="tag"># OSX</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/17/简单的引导程序/" rel="next" title="简单的引导程序">
+                <i class="fa fa-chevron-left"></i> 简单的引导程序
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/28/关于脚本文件的第一行-Shebang/" rel="prev" title="关于脚本文件的第一行 - Shebang">
+                关于脚本文件的第一行 - Shebang <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="Luke Chen" />
+            
+              <p class="site-author-name" itemprop="name">Luke Chen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">8</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">8</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/icecoobe" target="_blank" title="GitHub" rel="external nofollow"><i class="fa fa-fw fa-GitHub"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:icecoobe@qq.com" target="_blank" title="E-Mail" rel="external nofollow"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#elf-h-file-not-found"><span class="nav-number">1.</span> <span class="nav-text">elf.h file not found</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#arm-linux-androideabi-gcc-error-unrecognized-command-line-option-‘-mgeneral-regs-only’"><span class="nav-number">2.</span> <span class="nav-text">arm-linux-androideabi-gcc: error: unrecognized command line option ‘-mgeneral-regs-only’</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#‘vdso-offset-sigtramp’-undeclared-first-use-in-this-function"><span class="nav-number">3.</span> <span class="nav-text">‘vdso_offset_sigtramp’ undeclared (first use in this function)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fatal-error-dt-bindings-gpio-tegra-gpio-h-No-such-file-or-directory"><span class="nav-number">4.</span> <span class="nav-text">fatal error: dt-bindings/gpio/tegra-gpio.h: No such file or directory</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#后续"><span class="nav-number">5.</span> <span class="nav-text">后续</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Luke Chen</span>
+
+  
+
+  
+</div>
+
+
+  
+
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" rel="external nofollow" href="https://hexo.io">Hexo</a> v3.2.2</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a class="theme-link" target="_blank" rel="external nofollow" href="https://theme-next.org">NexT.Gemini</a> v6.4.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.4.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.4.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
